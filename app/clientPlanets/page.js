@@ -67,32 +67,36 @@ const PlanetForm = React.memo(({ handleSearch, searchKey, setSearchKey, isLoadin
 });
 
 
-// Componente para exibir os planetas em formato de tabela
-function PlanetTable({ planets }) {
-    return (
-        <div className="mt-6">
-            {planets.length > 0 ? (
-                <table className="min-w-full table-auto border-collapse bg-white shadow-md rounded-lg">
-                    <thead className="bg-blue-700">
-                        <tr>
-                            <th className="px-6 py-3 text-left text-sm font-semibold text-white">Nome</th>
-                            <th className="px-6 py-3 text-left text-sm font-semibold text-white">Período Orbital (dias)</th>
-                            <th className="px-6 py-3 text-left text-sm font-semibold text-white">Tamanho (raios terrestres)</th>
+// Componente de Tabela de Planetas
+import Link from 'next/link';
+
+const PlanetTable = ({ planets }) => (
+    <div className="mt-6">
+        {planets.length > 0 ? (
+            <table className="min-w-full table-auto border-collapse bg-white shadow-md rounded-lg">
+                <thead className="bg-blue-700">
+                    <tr>
+                        <th className="px-6 py-3 text-left text-sm font-semibold text-white">Nome</th>
+                        <th className="px-6 py-3 text-left text-sm font-semibold text-white">Período Orbital (dias)</th>
+                        <th className="px-6 py-3 text-left text-sm font-semibold text-white">Tamanho (raios terrestres)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {planets.map((planet) => (
+                        <tr key={planet.kepoi_name} className="border-b hover:bg-gray-100">
+                            <td className="px-6 py-3 text-sm text-blue-600">
+                                <Link href={`/planet/${planet.kepler_name}`}>
+                                    {planet.kepler_name}
+                                </Link>
+                            </td>
+                            <td className="px-6 py-3 text-sm text-black">{planet.koi_period}</td>
+                            <td className="px-6 py-3 text-sm text-black">{planet.koi_prad}</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {planets.map((planet) => (
-                            <tr key={planet.kepoi_name} className="border-b hover:bg-gray-100">
-                                <td className="px-6 py-3 text-sm text-black">{planet.kepler_name}</td>
-                                <td className="px-6 py-3 text-sm text-black">{planet.koi_period}</td>
-                                <td className="px-6 py-3 text-sm text-black">{planet.koi_prad}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            ) : (
-                <p className="text-center text-lg text-black">Nenhum planeta encontrado.</p>
-            )}
-        </div>
-    );
-}
+                    ))}
+                </tbody>
+            </table>
+        ) : (
+            <p className="text-center text-lg text-black">Nenhum planeta encontrado.</p>
+        )}
+    </div>
+);
