@@ -10,30 +10,22 @@ export default function ClientPlanets() {
 
     // Função para buscar os planetas
     async function fetchPlanets(planetSearchKey) {
-        setIsLoading(true); // Indica que a requisição começou
+        setIsLoading(true);
         try {
-            const res = await fetch(
-                "https://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=cumulative&format=JSON&select=kepid,kepoi_name,kepler_name,koi_disposition,koi_period,koi_prad,koi_teq,koi_insol,koi_steff&where=koi_disposition%20like%20%27CONFIRMED%27"
-            );
+            const res = await fetch(`/api/searchPlanets?planetSearchKey=${encodeURIComponent(planetSearchKey)}`);
             const data = await res.json();
-
-            console.log("Dados recebidos da API:", data); // Verifique a resposta da API
-
-            const filteredPlanets = data.filter((planet) => {
-                const matches = planet.kepler_name?.toLowerCase().includes(planetSearchKey.toLowerCase());
-                return matches;
-            });
-
-            console.log("Planetas filtrados:", filteredPlanets); // Verifique os planetas filtrados
-
-            setPlanets(filteredPlanets); // Atualiza o estado
+    
+            if (res.ok) {
+                setPlanets(data); // Atualiza o estado com os resultados filtrados
+            } else {
+                console.error("Erro ao buscar os planetas:", data.error);
+            }
         } catch (error) {
-            console.error("Erro ao buscar planetas:", error);
+            console.error("Erro na requisição à API:", error);
         } finally {
             setIsLoading(false);
         }
     }
-
     // Manipula o envio do formulário
     function handleSearch(event) {
         event.preventDefault(); // Impede o comportamento padrão de navegação do formulário
