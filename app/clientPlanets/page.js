@@ -1,47 +1,38 @@
-"use client"; // Adicionado no topo 
-import Form from "next/form";
+"use client";
 
+import { searchPlanets } from "../actions/planetActions";
 import React, { useState } from 'react';
 
 export default function ClientPlanets() {
-    const [planets, setPlanets] = useState([]); // Gerenciar os resultados
-    const [searchKey, setSearchKey] = useState(""); // Gerenciar o termo de busca
+    const [planets, setPlanets] = useState([]);
+    const [searchKey, setSearchKey] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
-    // Função para buscar os planetas
-    async function fetchPlanets(planetSearchKey) {
+    async function handleSearch(event) {
+        event.preventDefault();
+        const formData = new FormData();
+        formData.append("planetSearchKey", searchKey.trim());
+
+        if (!searchKey.trim()) return;
+
         setIsLoading(true);
         try {
-            const res = await fetch(`/api/searchPlanets?planetSearchKey=${encodeURIComponent(planetSearchKey)}`);
-            const data = await res.json();
-    
-            if (res.ok) {
-                setPlanets(data); // Atualiza o estado com os resultados filtrados
-            } else {
-                console.error("Erro ao buscar os planetas:", data.error);
-            }
+            const results = await searchPlanets(formData);
+            setPlanets(results);
         } catch (error) {
-            console.error("Erro na requisição à API:", error);
+            console.error("Erro ao buscar planetas:", error);
         } finally {
             setIsLoading(false);
-        }
-    }
-    // Manipula o envio do formulário
-    function handleSearch(event) {
-        event.preventDefault(); // Impede o comportamento padrão de navegação do formulário
-        const planetSearchKey = searchKey.trim(); // Evita buscar com espaços em branco
-        if (planetSearchKey) {
-            fetchPlanets(planetSearchKey); // Passa o termo de busca para a função de busca
         }
     }
 
     return (
         <div className="bg-[#0A1D2D] text-white min-h-screen flex flex-col p-4">
-            <PlanetForm 
-                handleSearch={handleSearch} // Passando a função handleSearch como prop
-                searchKey={searchKey} 
-                setSearchKey={setSearchKey} 
-                isLoading={isLoading} 
+            <PlanetForm
+                handleSearch={handleSearch}
+                searchKey={searchKey}
+                setSearchKey={setSearchKey}
+                isLoading={isLoading}
             />
             <PlanetTable planets={planets} />
         </div>
