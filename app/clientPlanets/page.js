@@ -2,6 +2,7 @@
 
 import { searchPlanets } from "../actions/planetActions";
 import React, { useState } from 'react';
+import Link from 'next/link';
 
 export default function ClientPlanets() {
     const [planets, setPlanets] = useState([]);
@@ -68,7 +69,6 @@ const PlanetForm = React.memo(({ handleSearch, searchKey, setSearchKey, isLoadin
 
 
 // Componente de Tabela de Planetas
-import Link from 'next/link';
 
 const PlanetTable = ({ planets }) => (
     <div className="mt-6">
